@@ -1,43 +1,30 @@
 
-# #########################################################################
-# PROMPT:                                                                 #
-# Determine whether the parenthesis are balanced in the given expression. #
-# #########################################################################
+# #######################################################################
+# PROMPT:                                                               #
+# Determine whether the parenthesis are balanced in a given expression. #
+# #######################################################################
 
 import re
 
 def balanceParens( expression ):
 
-    # balance parens using a stack
     parens = []
-    for character in expression:
+    for char in expression:
 
-        isOpenParens = re.match('[\(\[\{]', character)
-        isClosedParens = re.match('[\)\]\}]', character)
+        isOpenParens = re.match('[\(\[\{]', char)
+        isClosedParens = re.match('[\)\]\}]', char)
 
         if isOpenParens:
-            parens.append(character)
-        elif isClosedParens and len(parens) > 0:
-            if matchParens(parens.pop()) != character:
-                return False
-        elif isClosedParens and len(parens) == 0:
+            parens.append(char)
+        elif isClosedParens and len(parens) > 0 and compare(parens[-1], char):
+            parens.pop()
+        else:
             return False
 
     return len(parens) == 0
 
-def matchParens( paren ):
-    if paren == '(':
-        return ')'
-    elif paren == '[':
-        return ']'
-    elif paren == '{':
-        return '}'
-    elif paren == ')':
-        return '('
-    elif paren == ']':
-        return '['
-    elif paren == '}':
-        return '{'
+def compare( openParen, closeParen ):
+    return re.match('\(\)|\[\]|\{\}', openParen + closeParen)
 
 # BalanceParens:  "()"  True
 print 'BalanceParens:\t' + '"()"\t' + str(balanceParens('()'))
