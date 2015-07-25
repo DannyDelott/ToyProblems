@@ -4,28 +4,55 @@
 # Determine whether the parenthesis are balanced in the given expression. #
 # #########################################################################
 
+import re
+
 def balanceParens( expression ):
 
     # balance parens using a stack
-    stack = []
+    parens = []
     for character in expression:
-        if character == '(':
-            stack.append('(')
-        elif character == ')' and len(stack) > 0:
-            stack.pop()
-        else:
-            return False;
 
-    return len(stack) == 0
+        isOpenParens = re.match('[\(\[\{]', character)
+        isClosedParens = re.match('[\)\]\}]', character)
 
-# BalanceParens:  "("  False
-print 'BalanceParens:\t' + '"("\t' + str(balanceParens(')'))
+        if isOpenParens:
+            parens.append(character)
+        elif isClosedParens and len(parens) > 0:
+            if matchParens(parens.pop()) != character:
+                return False
+        elif isClosedParens and len(parens) == 0:
+            return False
 
-# BalanceParens:  ")("  False
-print 'BalanceParens:\t' + '")("\t' + str(balanceParens(')('))
+    return len(parens) == 0
+
+def matchParens( paren ):
+    if paren == '(':
+        return ')'
+    elif paren == '[':
+        return ']'
+    elif paren == '{':
+        return '}'
+    elif paren == ')':
+        return '('
+    elif paren == ']':
+        return '['
+    elif paren == '}':
+        return '{'
 
 # BalanceParens:  "()"  True
 print 'BalanceParens:\t' + '"()"\t' + str(balanceParens('()'))
 
-# BalanceParens:  "(()())"  True
-print 'BalanceParens:\t' + '"(()())"\t' + str(balanceParens('(()())'))
+# BalanceParens:  "[[[]{}[]]()]"  True
+print 'BalanceParens:\t' + '"[[[]{}[]]()]"\t' + str(balanceParens('[[[]{}[]]()]'))
+
+# BalanceParens:  "({}){[]}[()]"  True
+print 'BalanceParens:\t' + '"({}){[]}[()]"\t' + str(balanceParens('({}){[]}[()]'))
+
+# BalanceParens:  "("  False
+print 'BalanceParens:\t' + '"("\t' + str(balanceParens('('))
+
+# BalanceParens:  ")("  False
+print 'BalanceParens:\t' + '")("\t' + str(balanceParens(')('))
+
+# BalanceParens:  "[{]}"  False
+print 'BalanceParens:\t' + '"[{]}"\t' + str(balanceParens('[{]}'))
