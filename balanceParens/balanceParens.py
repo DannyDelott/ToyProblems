@@ -6,19 +6,17 @@
 
 def balanceParens( expression ):
 
-    # Read parens from expression into a stack (FILO)
+    # balance parens using a stack
     stack = []
     for character in expression:
-        if(character == '(' or character == ')'): stack.append(character)
+        if character == '(':
+            stack.append('(')
+        elif character == ')' and len(stack) > 0:
+            stack.pop()
+        else:
+            return False;
 
-    # Evaluate parens from stack
-    balance = []
-    for character in reversed(stack):
-        if character == ')': balance.append(')')
-        elif character == '(' and len(balance) > 0: balance.pop()
-        else: return False;
-
-    return len(balance) == 0
+    return len(stack) == 0
 
 # BalanceParens:  "("  False
 print 'BalanceParens:\t' + '"("\t' + str(balanceParens(')'))
